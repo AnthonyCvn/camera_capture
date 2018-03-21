@@ -34,7 +34,7 @@ Reference page to install ROS kinetic on Ubuntu:
 To build from source, clone the latest version from this repository into your catkin workspace and compile the package using
 
 	cd catkin_workspace/src
-	git clone https://github.com/...
+	git clone https://github.com/AnthonyCvn/camera_capture.git
 	cd ../
 	catkin build camera_capture
 
@@ -117,7 +117,7 @@ Open the UVC camera and share the frames using image_transport package.
 
 ## Bugs & Feature Requests
 
-Please report bugs and request features using the [Issue Tracker](https://github.com/...).
+Please report bugs and request features using the [Issue Tracker](https://github.com/AnthonyCvn/camera_capture/issues).
 
 
 [ROS]: http://www.ros.org
