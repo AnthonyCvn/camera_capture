@@ -15,8 +15,6 @@ The source code is released under a [BSD 3-Clause license](camera_capture/LICENS
 
 The camera_capture package has been tested under [ROS] kinetic and Ubuntu 16.04.
 
-[![Build Status]
-
 ## Installation
 
 Reference page to install ROS kinetic on Ubuntu:
