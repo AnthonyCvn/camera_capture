@@ -19,7 +19,7 @@ The camera_capture package has been tested under [ROS] kinetic and Ubuntu 16.04.
 
 Reference page to install ROS kinetic on Ubuntu:
 
-[Robot Operating System (ROS)] http://wiki.ros.org/kinetic/Installation/Ubuntu
+[Robot Operating System (ROS)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 
 #### Dependencies
 
