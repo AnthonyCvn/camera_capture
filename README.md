@@ -24,8 +24,8 @@ Reference page to install ROS kinetic on Ubuntu:
 #### Dependencies
 
 - [Robot Operating System (ROS)](http://wiki.ros.org) (middleware for robotics),
-- [image_transport (ROS package)](http://wiki.ros.org/image_transport),
-- [OpenCV] (https://opencv.org/) (library for computer vision)
+- [image_transport](http://wiki.ros.org/image_transport) (ROS package),
+- [OpenCV](https://opencv.org/) (library for computer vision)
 
 #### Building
 
