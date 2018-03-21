@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="is_running"        default="true" />
+  <arg name="camera_num"        default="0" />
+  <arg name="is_stereo"         default="true" /> 
+  <arg name="height"          	default="720" />
+  <arg name="width"          	default="2560" />
+  <arg name="fps"          	default="30" />
+
+
+  <!-- Launch camera_capture node -->
+  <node pkg="camera_capture" type="camera_capture" name="camera_capture" output="screen">
+
+    <!-- Camera mode -->
+    <param name="is_running"            value="$(arg is_running)" />
+    <param name="is_stereo"             value="$(arg is_stereo)" />
+    <param name="camera_num"            value="$(arg camera_num)" />
+
+    <!-- Camera parameters -->
+    <param name="height"                value="$(arg height)" />
+    <param name="width"         	value="$(arg width)" />
+    <param name="fps"            	value="$(arg fps)" />
+  </node>
+
+  <!-- Disable compressed plugin -->
+  <group ns="camera_capture/stereo/left/image" >
+    <rosparam param="disable_pub_plugins">
+      - 'image_transport/compressed'
+      - 'image_transport/compressedDepth'
+    </rosparam>
+  </group>
+ 
+  <group ns="camera_capture/stereo/right/image" >
+    <rosparam param="disable_pub_plugins">
+      - 'image_transport/compressed'
+      - 'image_transport/compressedDepth'
+    </rosparam>
+  </group>
+
+</launch>
