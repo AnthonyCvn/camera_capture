@@ -9,9 +9,9 @@ Camera settings (height, width and frequency) can be changed dynamically with th
 
 ### License
 
-The source code is released under a [BSD 3-Clause license](camera_capture/LICENSE).
+The source code is released under a [BSD 2-Clause license](https://github.com/AnthonyCvn/camera_capture/blob/master/LICENSE).
 
-**Author(s): Anthony Cavin**
+**Author: Anthony Cavin**
 
 The camera_capture package has been tested under [ROS] kinetic and Ubuntu 16.04.
 
@@ -86,12 +86,6 @@ Use the ROS service to change the camera settings:
 ### camera_capture
 
 Open the UVC camera and share the frames using image_transport package.
-
-
-#### Subscribed Topics
-
-...
-
 
 #### Published Topics
 
