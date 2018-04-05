@@ -12,8 +12,13 @@
 namespace camera_capture {
 
 CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
-    : nodeHandle_(nodeHandle)
+    : nodeHandle_(nodeHandle),
+      info_mgr_(nodeHandle)
 {
+
+//  info_pub_(nodeHandle),
+//  info_mgr_(nodeHandle)
+
   if (!readParameters()) {
     ROS_ERROR("Could not read parameters.");
     ros::requestShutdown();
@@ -26,7 +31,7 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
     imageLeftPublisher_  = it.advertise("stereo/left/image", 1);
     imageRightPublisher_ = it.advertise("stereo/right/image", 1);
   }else {
-	imagePublisher_  = it.advertise("camera/image", 1);
+    imagePublisher_  = it.advertise("camera/image", 1);
   }
 
   // Launch the ROS service.
@@ -45,6 +50,10 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
   }
 
   ROS_INFO("Camera successfully launched.");
+
+
+  // Camera info publisher.
+  info_pub_ = nodeHandle_.advertise<sensor_msgs::CameraInfo>("camera_info", 1, this);
 
   // Launch the ROS timer interruption.
   timer_ = nodeHandle_.createTimer(ros::Duration(1/(double)fps_),
@@ -104,8 +113,21 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
 		// Publish images
 		imagePublisher_.publish(msgim);
 	  }
-	}
-	// Camera will be deinitialized automatically in VideoCapture destructor
+	}// Camera will be deinitialized automatically in VideoCapture destructor
+
+  // Camera information management
+  info_mgr_.setCameraName("camera");
+  //info_mgr_.loadCameraInfo(url);
+
+  sensor_msgs::CameraInfoPtr info(new sensor_msgs::CameraInfo(info_mgr_.getCameraInfo()));
+
+  info->width = width_;
+  info->height = height_;
+
+  //info->header.stamp = time;
+  info->header.frame_id = "";
+
+  info_pub_.publish(info);
 }
 
 bool CameraCapture::serviceCallback(camera_capture::SetCamera::Request &request,

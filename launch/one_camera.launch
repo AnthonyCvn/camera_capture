@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch camera -->
+  <group ns="camera0">
+      <include file="$(find camera_capture)/launch/camera_capture.launch">
+          <arg name="camera_num"	value="0" />
+      </include>
+  </group>
+
+</launch>

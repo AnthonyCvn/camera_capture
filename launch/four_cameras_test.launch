@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <launch>
   <!-- First camera -->
-  <group ns="cam1">
+  <group ns="camera0">
       <include file="$(find camera_capture)/launch/camera_capture.launch">
           <arg name="camera_num"	value="0" />
       </include>
   </group>
  
   <!-- Second camera -->
-  <group ns="cam2">
+  <group ns="camera1">
       <include file="$(find camera_capture)/launch/camera_capture.launch">
           <arg name="camera_num"	value="1" />
       </include>
   </group>
 
   <!-- Third camera -->
-  <group ns="cam3">
+  <group ns="camera2">
       <include file="$(find camera_capture)/launch/camera_capture.launch">
           <arg name="camera_num"	value="2" />
       </include>
   </group>
 
   <!-- Fourth camera -->
-  <group ns="cam4">
+  <group ns="camera3">
       <include file="$(find camera_capture)/launch/camera_capture.launch">
           <arg name="camera_num"	value="3" />
       </include>

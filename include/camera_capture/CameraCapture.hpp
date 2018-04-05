@@ -8,6 +8,7 @@
 #include <sensor_msgs/Temperature.h>
 #include <std_srvs/Trigger.h>
 #include <image_transport/image_transport.h>
+#include <camera_info_manager/camera_info_manager.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -72,6 +73,12 @@ class CameraCapture
 
   //! ROS timer.
   ros::Timer timer_;
+
+  //! Camera info publisher.
+  ros::Publisher info_pub_;
+
+  //! Camera info manager.
+  camera_info_manager::CameraInfoManager info_mgr_;
 
   //! Algorithm computation object.
   Algorithm algorithm_;

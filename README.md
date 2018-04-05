@@ -48,11 +48,6 @@ Run the main node with
 
 	roslaunch camera_capture camera_capture.launch
 
-Use the ROS service to change the camera settings:
-
-	rosservice call /camera_capture/set_camera 
-		"{height: 1080, width: 1920, fps: 30, conf_camera: true, run_camera: true}"
-
 ## Launch files
 
 * **camera_capture.launch:** Launch one camera.
@@ -67,7 +62,7 @@ Use the ROS service to change the camera settings:
 
     Argument set 3
 	
-     - **`is_stereo`** Set true for stereo camera. Default: `true`.
+     - **`is_stereo`** Set true for stereo camera. Default: `false`.
 
     Argument set 4
 	
