@@ -98,6 +98,12 @@ class CameraCapture
   //! ROS server parameters; for stereo mode.
   bool isStereo_;
 
+  //! Camera info folder location.
+  std::string cameraInfoUrl_;
+
+  //! Camera frame ID.
+  std::string cameraId_;
+
   //! ROS server parameters; height resolution.
   int height_;
 
