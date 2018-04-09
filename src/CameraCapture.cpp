@@ -51,8 +51,9 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
 
   ROS_INFO("Camera successfully launched.");
 
-
-  // Camera info publisher.
+  // Camera info management and publisher.
+  info_mgr_.setCameraName("camera");
+  info_mgr_.loadCameraInfo(cameraInfoUrl_);
   info_pub_ = nodeHandle_.advertise<sensor_msgs::CameraInfo>("camera_info", 1, this);
 
   // Launch the ROS timer interruption.
@@ -71,9 +72,11 @@ CameraCapture::~CameraCapture()
 
 bool CameraCapture::readParameters()
 {
-  if (nodeHandle_.getParam("is_running", isRunning_) &&
+  if (nodeHandle_.getParam("camera_id", cameraId_)   &&
+    nodeHandle_.getParam("is_running", isRunning_) &&
 	  nodeHandle_.getParam("camera_num", cameraNum_) &&
 	  nodeHandle_.getParam("is_stereo", isStereo_)   &&
+    nodeHandle_.getParam("calib_file_path", cameraInfoUrl_)   &&
 	  nodeHandle_.getParam("height", height_)     	 &&
 	  nodeHandle_.getParam("width", width_)          &&
 	  nodeHandle_.getParam("fps", fps_) ) return true;
@@ -115,17 +118,27 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
 	  }
 	}// Camera will be deinitialized automatically in VideoCapture destructor
 
-  // Camera information management
-  info_mgr_.setCameraName("camera");
-  //info_mgr_.loadCameraInfo(url);
 
   sensor_msgs::CameraInfoPtr info(new sensor_msgs::CameraInfo(info_mgr_.getCameraInfo()));
+
+  // Throw out not calibrated camera
+  if (info->K[0] != 0.0 &&
+       (width_ != info->width
+          || height_ != info->height)) {
+    info.reset(new sensor_msgs::CameraInfo());
+  }
+
+  // If we don't have a calibration, set the image dimensions
+  if (info->K[0] == 0.0) {
+    info->width = width_;
+    info->height = height_;
+}
 
   info->width = width_;
   info->height = height_;
 
   //info->header.stamp = time;
-  info->header.frame_id = "";
+  info->header.frame_id = cameraId_;
 
   info_pub_.publish(info);
 }
@@ -143,9 +156,9 @@ bool CameraCapture::serviceCallback(camera_capture::SetCamera::Request &request,
   if(request.is_toconf)
   {
     camSettings_.fps    = (int)request.fps;
-	camSettings_.height = (int)request.height;
-	camSettings_.width  = (int)request.width;
-	algorithm_.setCamSettings(camSettings_);
+    camSettings_.height = (int)request.height;
+    camSettings_.width  = (int)request.width;
+    algorithm_.setCamSettings(camSettings_);
   }
 
   return true;
