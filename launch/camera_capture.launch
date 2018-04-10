@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="camera_id"        default="camera0" />
+  <param name="camera_id"   	value="camera0" />
   <arg name="is_running"        default="true" />
   <arg name="camera_num"        default="0" />
   <arg name="is_stereo"         default="true" />
@@ -12,7 +12,7 @@
 
   <!-- Launch camera_capture node -->
   <node pkg="camera_capture" type="camera_capture" name="camera_capture" output="screen">
-  
+
     <!-- Camera mode -->
     <param name="camera_id"             value="$(arg camera_id)" />
     <param name="is_running"            value="$(arg is_running)" />
