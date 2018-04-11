@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <launch>
-  <param name="camera_id"   	value="camera0" />
+  <arg name="camera_id"   	default="camera0" />
   <arg name="is_running"        default="true" />
   <arg name="camera_num"        default="0" />
   <arg name="is_stereo"         default="true" />
   <arg name="calib_file_path" default="file://$(find camera_capture)/calibration/camera.yaml" />
   <arg name="height"          	default="720" />
   <arg name="width"          	default="2560" />
-  <arg name="fps"          	default="0.5" />
+  <arg name="fps"          	default="1" />
 
 
   <!-- Launch camera_capture node -->
