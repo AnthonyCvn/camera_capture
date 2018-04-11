@@ -13,7 +13,7 @@ namespace camera_capture {
 
 CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
     : nodeHandle_(nodeHandle),
-      info_mgr_(nodeHandle)
+      info_mgr_(nodeHandle, "camera")
 {
 
 //  info_pub_(nodeHandle),
@@ -87,6 +87,8 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
 {
 	static cv::Mat frame, left_image, right_image;
 
+	ros::Time cap_time = ros::Time::now();
+
 	if(algorithm_.getCamIsToConf())
 	{
 	  timer_.stop();
@@ -102,42 +104,54 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
 
 	  if(isStereo_){
 	    // Extract left and right images from side-by-side.
-		left_image = frame(cv::Rect(0, 0, frame.cols / 2, frame.rows));
-		right_image = frame(cv::Rect(frame.cols / 2, 0, frame.cols / 2, frame.rows));
-		// OpenCv bridge to ROS standard message.
-		sensor_msgs::ImagePtr msgim_right = cv_bridge::CvImage(std_msgs::Header(), "bgr8", right_image).toImageMsg();
-		sensor_msgs::ImagePtr msgim_left  = cv_bridge::CvImage(std_msgs::Header(), "bgr8", left_image ).toImageMsg();
-		// Publish images
-		imageLeftPublisher_.publish(msgim_right);
-		imageRightPublisher_.publish(msgim_left);
+      left_image = frame(cv::Rect(0, 0, frame.cols / 2, frame.rows));
+      right_image = frame(cv::Rect(frame.cols / 2, 0, frame.cols / 2, frame.rows));
+      // OpenCv bridge to ROS standard message.
+      sensor_msgs::ImagePtr msgim_right = cv_bridge::CvImage(std_msgs::Header(), "bgr8", right_image).toImageMsg();
+      sensor_msgs::ImagePtr msgim_left  = cv_bridge::CvImage(std_msgs::Header(), "bgr8", left_image ).toImageMsg();
+
+      // Add header information
+      msgim_right->header.stamp = cap_time ;
+      msgim_right->header.frame_id = cameraId_;
+      msgim_left->header.stamp = cap_time ;
+      msgim_left->header.frame_id = cameraId_;
+
+      // Publish images
+      imageLeftPublisher_.publish(msgim_right);
+      imageRightPublisher_.publish(msgim_left);
 	  }else {
-		// OpenCv bridge to ROS standard message.
-		sensor_msgs::ImagePtr msgim = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-		// Publish images
-		imagePublisher_.publish(msgim);
+      // OpenCv bridge to ROS standard message.
+      sensor_msgs::ImagePtr msgim = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+      // Add header information
+      msgim->header.stamp = cap_time ;
+      msgim->header.frame_id = cameraId_;
+      // Publish images
+      imagePublisher_.publish(msgim);
 	  }
 	}// Camera will be deinitialized automatically in VideoCapture destructor
 
 
   sensor_msgs::CameraInfoPtr info(new sensor_msgs::CameraInfo(info_mgr_.getCameraInfo()));
 
+  /*
   // Throw out not calibrated camera
-  if (info->K[0] != 0.0 &&
-       (width_ != info->width
-          || height_ != info->height)) {
+  if (info->K[0] != 0.0 && (width_ != info->width || height_ != info->height)) {
     info.reset(new sensor_msgs::CameraInfo());
   }
-
+*/
   // If we don't have a calibration, set the image dimensions
   if (info->K[0] == 0.0) {
     info->width = width_;
     info->height = height_;
-}
+  }
 
-  info->width = width_;
   info->height = height_;
+  if(isStereo_)
+    info->width = width_/2;
+  else
+    info->width = width_;
 
-  //info->header.stamp = time;
+  info->header.stamp = cap_time;
   info->header.frame_id = cameraId_;
 
   info_pub_.publish(info);
