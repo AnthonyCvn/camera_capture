@@ -13,7 +13,7 @@ namespace camera_capture {
 
 CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
     : nodeHandle_(nodeHandle),
-      info_mgr_(nodeHandle, "camera")
+      info_mgr_(nodeHandle)
 {
 
 //  info_pub_(nodeHandle),
@@ -52,7 +52,7 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
   ROS_INFO("Camera successfully launched.");
 
   // Camera info management and publisher.
-  info_mgr_.setCameraName("camera");
+  info_mgr_.setCameraName("camera"+std::to_string(cameraNum_));
   info_mgr_.loadCameraInfo(cameraInfoUrl_);
   info_pub_ = nodeHandle_.advertise<sensor_msgs::CameraInfo>("camera_info", 1, this);
 

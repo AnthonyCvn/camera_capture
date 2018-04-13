@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="camera_id"   	default="camera" />
+  <arg name="camera_id"   	default="camera0" />
   <arg name="is_running"        default="true" />
   <arg name="camera_num"        default="0" />
   <arg name="is_stereo"         default="true" />
