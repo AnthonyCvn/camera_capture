@@ -24,6 +24,12 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
     ros::requestShutdown();
   }
 
+  // Set camera settings
+  camSettings_.fps    = (int)fps_;
+  camSettings_.height = (int)height_;
+  camSettings_.width  = (int)width_;
+  algorithm_.setCamSettings(camSettings_);
+
   // Launch the ImageTransport publisher
   image_transport::ImageTransport it(nodeHandle);
 
@@ -60,10 +66,12 @@ CameraCapture::CameraCapture(ros::NodeHandle& nodeHandle)
   timer_ = nodeHandle_.createTimer(ros::Duration(1/(double)fps_),
 		  	  	  	  	  	  	   &CameraCapture::timerCallback, this);
 
+  // Launch the ROS timer interruption.
+  chrono_ = nodeHandle_.createTimer(ros::Duration(1/((double)fps_)),
+                               &CameraCapture::chronoCallback, this);
+
   // Set the algorihm to running mode.
   algorithm_.setCamIsRunning(isRunning_);
-
-  ROS_INFO("Node successfully launched.");
 }
 
 CameraCapture::~CameraCapture()
@@ -88,14 +96,17 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
 	static cv::Mat frame, left_image, right_image;
 
 	ros::Time cap_time = ros::Time::now();
+	// ROS_INFO("%i s %i ns \n\n", cap_time.sec, cap_time.nsec);
 
 	if(algorithm_.getCamIsToConf())
 	{
 	  timer_.stop();
 	  capture_.set(CV_CAP_PROP_FRAME_WIDTH, (int)algorithm_.getCamSettings().width);
 	  capture_.set(CV_CAP_PROP_FRAME_HEIGHT,(int)algorithm_.getCamSettings().height);
-	  timer_.setPeriod(ros::Duration(1/(double)algorithm_.getCamSettings().fps));
+	  timer_.setPeriod(ros::Duration(1.0/(double)algorithm_.getCamSettings().fps));
 	  timer_.start();
+	  ROS_INFO("Node successfully launched and camera %d configured.", cameraNum_);
+
 	}
 	if(algorithm_.getCamIsRunning())
 	{
@@ -155,6 +166,12 @@ void CameraCapture::timerCallback(const ros::TimerEvent& event)
   info->header.frame_id = cameraId_;
 
   info_pub_.publish(info);
+}
+
+void CameraCapture::chronoCallback(const ros::TimerEvent& event)
+{
+  //ros::Time cap_time = ros::Time::now();
+  //ROS_INFO("%i s %i ns \n\n", cap_time.sec, cap_time.nsec);
 }
 
 bool CameraCapture::serviceCallback(camera_capture::SetCamera::Request &request,

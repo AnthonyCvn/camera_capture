@@ -3,7 +3,7 @@
 namespace camera_capture {
 
 Algorithm::Algorithm()
-    : istoconf_(false),
+    : istoconf_(true),
 	  isrunning_(true)
 {
 }
@@ -29,7 +29,7 @@ bool Algorithm::getCamIsToConf()
   if(istoconf_)
   {
     istoconf_ = false;
-	return true;
+    return true;
   }
   return false;
 }

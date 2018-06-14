@@ -43,6 +43,7 @@ class CameraCapture
    * @param TimerEvent the event structure of the timer.
    */
   void timerCallback(const ros::TimerEvent &event);
+  void chronoCallback(const ros::TimerEvent &event);
 
   /*!
    * ROS service server callback.
@@ -73,6 +74,7 @@ class CameraCapture
 
   //! ROS timer.
   ros::Timer timer_;
+  ros::Timer chrono_;
 
   //! Camera info publisher.
   ros::Publisher info_pub_;

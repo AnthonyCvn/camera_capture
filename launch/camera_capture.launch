@@ -5,9 +5,9 @@
   <arg name="camera_num"        default="0" />
   <arg name="is_stereo"         default="true" />
   <arg name="calib_file_path" default="file://$(find camera_capture)/calibration/camera.yaml" />
-  <arg name="height"          	default="720" />
-  <arg name="width"          	default="2560" />
-  <arg name="fps"          	default="1" />
+  <arg name="height"          	default="1242" />
+  <arg name="width"          	default="4416" />
+  <arg name="fps"          	default="3" />
 
 
   <!-- Launch camera_capture node -->
